@@ -10,7 +10,7 @@
 <body>
 <form method="post" action="process.php">
     <input type="text" name="username" placeholder="username">
-    <input type="password" name="passwrod" placeholder="password">
+    <input type="password" name="password" placeholder="password">
     <input type="submit" name="login" value="Login"> <br>
     <a href="register.php">Register</a>
 </form>

@@ -11,7 +11,7 @@
 <form method="post" action="process.php">
     <input type="text" name="username" placeholder="username">
     <input type="email" name="email" placeholder="email">
-    <input type="password" name="passwrod" placeholder="password">
+    <input type="password" name="password" placeholder="password">
     <input type="submit" name="register" value="Register"> <br>
 </form>
 <a href="login.php">Login</a>
