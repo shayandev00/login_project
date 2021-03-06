@@ -12,10 +12,10 @@ if (isset($_POST['register'])) {
     if  ($username == "" || $email == "" || $password == ""){
         return;
     }
-        if($checkUserNameExit($co,$username)){
+        if(!checkUserNameExit($con,$username)){
             return;
         } 
-        if($checkEmailExit($co,$email)){
+        if(!checkEmailExit($con,$email)){
             return;
         } 
 
@@ -39,7 +39,7 @@ if (isset($_POST['login'])) {
     }else{
         $json = array(
             "status" => false,
-            "message" => "The usename and password in incurrect"
+            "message" => "The username and password in incurrect"
         );
         $show = json_encode($json);
         echo $show;
@@ -54,14 +54,11 @@ if (isset($_POST['update'])){
     if  ($username == "" || $email == "" || $password == ""){
         return;
     }
-    if  ($username == "" || $email == "" || $password == ""){
-        return;
-    }
-        if($checkUserNameExit($con,$username)){
+        if(!checkUserNameExit($con,$username)){
             echo "Username Already exit";
             return;
         } 
-        if($checkEmailExit($con,$email)){
+        if(!checkEmailExit($con,$email)){
             echo "Email Already exit";
             return;
         } 
@@ -69,7 +66,7 @@ if (isset($_POST['update'])){
 
     $currentUserName = $_SESSION['username'];
 
-    $query = $con->prepare("SELECT FROM * WHERE username:=$username");
+    $query = $con->prepare("SELECT FROM * WHERE username:=username");
 
     $query->bindParam(":username",$currentUserName);
 
@@ -79,7 +76,7 @@ if (isset($_POST['update'])){
      
     $id = $result['id'];
 
-    if (updateDetails($con,$id, $username, $email, $password)) ;
+    if (updateDetails($con,$id,$username,$email,$password)) ;
     {
         $_SESSION['username'] = $username;
         header("Location: profile.php");
@@ -123,10 +120,7 @@ function sanitizePassword($string){
 }
 
 function updateDetails($con,$id,$username,$password){
-    $query = $con->prepare("
-        UPDATE users SET username:=username.email:=email,password:=password
-        WHERE id:=id
-    ");
+    $query = $con->prepare(" UPDATE users SET username:=username.email:=email,password:=password WHERE id:=id");
 }
     $query->bindParam(":username",$username);
     $query->bindParam(":email",$email);
@@ -135,29 +129,27 @@ function updateDetails($con,$id,$username,$password){
 
     return $query->execute();
 
-function checkUserNameExit($con,$username){
 
-    $query = $con->prepare("
-        SELECT * FROM users WHERE username=:username
-    ");
+//checkUserNameExit
+function checkUserNameExit($con,$username){
+    $query = $con->prepare(" SELECT * FROM users WHERE username=:username");
     $query->bindParam(":username",$username);
+    $query->execute();
 
     //check
 
-    if  ($query->rowCount()){
+    if  ($query->rowCount() == 1){
         return false;
     }else{
         return true;
     }
-
 }
 
-function checkEmailExit($con,$email){
-        $query = $con->prepare("
-        SELECT * FROM users WHERE email=:email
-            ");
-    $query->bindParam(":username",$email);
 
+//checkEmailExit
+function checkEmailExit($con,$email){
+    $query = $con->prepare("SELECT * FROM users WHERE email=:email ");
+    $query->bindParam(":email",$email);
     $query->execute();
 
     //check

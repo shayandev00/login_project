@@ -3,17 +3,6 @@ include_once("config.php");
 
 $con = config::connect();
 
-$results = fetcRecoreds($con);
-function fetcRecoreds($con){
-
-    $query = $con->prepare("
-        SELECT * FROM users
-    ");
-    $query->execute();
-
-    $results = $query->fetchAll();
-}
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -29,27 +18,6 @@ function fetcRecoreds($con){
 <a href="login.php">Login</a>
 <a href="register.php">Register</a>
 
-<table>
-    <tr>
-        <th>Email</th>
-        <th>Username</th>
-    </tr>
-            <?php
-                    foreach($user as $user)
-                    {
-?>
 
-                   <tr>
-                        <td><?php echo $user['email'];?></td>  
-                        <td><?php echo $user['username'];?></td>      
-                   </tr>
-                  
-                  <?php
-
-                    }
-                
-                    ?>
-                    
-    </table>
 </body>
 </html>
