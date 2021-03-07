@@ -39,7 +39,7 @@ if (isset($_POST['login'])) {
     }else{
         $json = array(
             "status" => false,
-            "message" => "The username and password in incurrect"
+            "message" => "The username and password in incorrect"
         );
         $show = json_encode($json);
         echo $show;
@@ -119,17 +119,18 @@ function sanitizePassword($string){
     return $string;
 }
 
-function updateDetails($con,$id,$username,$password){
-    $query = $con->prepare(" UPDATE users SET username:=username.email:=email,password:=password WHERE id:=id");
-}
-    $query->bindParam(":username",$username);
-    $query->bindParam(":email",$email);
-    $query->bindParam(":password",$password);
-    $query->bindParam(":id",$id);
+function updateDetails($con,$id,$username,$email,$password)
+{
+    $query = $con->prepare(" UPDATE users SET username=:username, email=:email, password=:password WHERE id=:id");
+
+    $query->bindParam(":username", $username);
+    $query->bindParam(":email", $email);
+    $query->bindParam(":password", $password);
+    $query->bindParam(":id", $id);
 
     return $query->execute();
 
-
+}
 //checkUserNameExit
 function checkUserNameExit($con,$username){
     $query = $con->prepare(" SELECT * FROM users WHERE username=:username");
@@ -148,7 +149,7 @@ function checkUserNameExit($con,$username){
 
 //checkEmailExit
 function checkEmailExit($con,$email){
-    $query = $con->prepare("SELECT * FROM users WHERE email=:email ");
+    $query = $con->prepare("SELECT * FROM users WHERE email=:email");
     $query->bindParam(":email",$email);
     $query->execute();
 
