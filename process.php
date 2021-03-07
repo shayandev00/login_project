@@ -55,23 +55,32 @@ if (isset($_POST['update'])){
         return;
     }
         if(!checkUserNameExit($con,$username)){
-            echo "Username Already exit";
-            return;
+//            echo "Username Already exit";
+//            return;
+            $json = array(
+                "status" => false,
+                "message" => "Username Already exit"
+            );
+            $show = json_encode($json);
+            echo $show;
         } 
         if(!checkEmailExit($con,$email)){
-            echo "Email Already exit";
-            return;
-        } 
+//            echo "Email Already exit";
+//            return;
+        $json =array(
+            "status" => false,
+            "message" => "Email Already exit"
+        );
+        $show = json_encode($json);
+        echo $show;
+        }
 
 
     $currentUserName = $_SESSION['username'];
 
-    $query = $con->prepare("SELECT FROM * WHERE username:=username");
-
+    $query = $con->prepare("SELECT FROM * WHERE username=:username");
     $query->bindParam(":username",$currentUserName);
-
     $query->execute();
-
     $result = $query->fetch(PDO::FETCH_ASSOC);
      
     $id = $result['id'];
@@ -121,24 +130,24 @@ function sanitizePassword($string){
 
 function updateDetails($con,$id,$username,$email,$password)
 {
-    $query = $con->prepare(" UPDATE users SET username=:username, email=:email, password=:password WHERE id=:id");
+    $query = $con->prepare(" UPDATE users SET username=:username, `email=:email, password=:password WHERE id=:id");
 
     $query->bindParam(":username", $username);
     $query->bindParam(":email", $email);
-    $query->bindParam(":password", $password);
+    $query->bindParam(":pas2sword", $password);
     $query->bindParam(":id", $id);
 
-    return $query->execute();
+//    return $query->execute();
+     var_dump($query);
 
 }
 //checkUserNameExit
 function checkUserNameExit($con,$username){
-    $query = $con->prepare(" SELECT * FROM users WHERE username=:username");
+    $query = $con->prepare(" SELECT * FROM users WHERE usernmae=:username");
     $query->bindParam(":username",$username);
     $query->execute();
 
     //check
-
     if  ($query->rowCount() == 1){
         return false;
     }else{
@@ -146,22 +155,19 @@ function checkUserNameExit($con,$username){
     }
 }
 
-
 //checkEmailExit
 function checkEmailExit($con,$email){
-    $query = $con->prepare("SELECT * FROM users WHERE email=:email");
+    $query = $con->prepare(" SELECT * FROM users WHERE email=:email");
     $query->bindParam(":email",$email);
     $query->execute();
 
     //check
-
     if  ($query->rowCount() == 1){
         return false;
     }else{
         return true;
     }
 }
-
 
 ?>
 
